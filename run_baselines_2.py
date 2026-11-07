@@ -27,6 +27,6 @@ QUERIES = [
 
 if __name__ == "__main__":
     run(PROJECT_DIR / "projects.jsonl",
-        PROJECT_DIR / "baseline_results_teammate",
+        PROJECT_DIR / "baseline_results_2",
         25, 42, PROJECT_DIR / "stopwords.txt",
         query_texts=QUERIES, query_start=21)
