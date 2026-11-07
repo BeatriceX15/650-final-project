@@ -118,7 +118,8 @@ def write_csv(path, rows, columns):
         writer.writerows(rows)
 
 
-def run(data_path, output_dir, top_k, seed, stopwords_path):
+def run(data_path, output_dir, top_k, seed, stopwords_path,
+        query_texts=QUERIES, query_start=1):
     with data_path.open(encoding="utf-8") as file:
         repositories = [json.loads(line) for line in file if line.strip()]
     by_id = {int(repo["repo_id"]): repo for repo in repositories}
@@ -133,10 +134,10 @@ def run(data_path, output_dir, top_k, seed, stopwords_path):
     methods = {"BM25": BM25(index), "TF-IDF": TFIDF(index)}
 
     queries = [{"query_id": f"q{i:02d}", "query": query}
-               for i, query in enumerate(QUERIES, start=1)]
+               for i, query in enumerate(query_texts, start=query_start)]
     results, pool = [], []
     all_ids = sorted(by_id)
-    for i, query in enumerate(queries):
+    for i, query in enumerate(queries, start=query_start - 1):
         ranked = {name: search(query["query"], index, scorer, stopwords)[:top_k]
                   for name, scorer in methods.items()}
         ranked["Random"] = [(doc_id, None) for doc_id in
